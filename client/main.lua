@@ -192,7 +192,13 @@ local function LockpickDoor(isAdvanced)
             local vehLockStatus = GetVehicleDoorLockStatus(vehicle)
             if (vehLockStatus > 0) then
                 usingAdvanced = isAdvanced
-                TriggerEvent('qb-lockpick:client:openLockpick', lockpickFinish)
+                --TriggerEvent('qb-lockpick:client:openLockpick', lockpickFinish)
+                local success = exports['qb-lockpickminigame']:StartLockPickCircle(1, math.random(3,9), success)
+                if success then
+                    lockpickFinish(true)
+                else
+                    lockpickFinish(false)
+                end
             end
         end
     end
@@ -365,7 +371,12 @@ CreateThread(function()
                                     SetVehicleDoorsLocked(entering, 1)
                                     HasVehicleKey = true
                                 else
-                                    SetVehicleDoorsLocked(entering, 2)
+                                    print(plate)
+                                    if plate == "BUS" then
+                                      SetVehicleDoorsLocked(entering, 1)
+                                    else
+                                      SetVehicleDoorsLocked(entering, 2)
+                                    end
                                 end
                             else
                                 TriggerEvent("vehiclekeys:client:SetOwner", plate)
@@ -378,13 +389,13 @@ CreateThread(function()
                                     if result == false then
                                         SetVehicleDoorsLocked(entering, 2)
                                         HasVehicleKey = false
-                                    else 
+                                    else
                                         HasVehicleKey = true
                                     end
                                 elseif lockpicked and lockpickedPlate == plate then
                                     if result == false then
                                         HasVehicleKey = false
-                                    else 
+                                    else
                                         HasVehicleKey = true
                                     end
                                 end
